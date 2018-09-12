@@ -1,0 +1,24 @@
+{
+  "name": "webpack-prototype",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babylonjs": "^3.2.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^4.5.2",
+    "ts-loader": "^5.1.0",
+    "typescript": "^3.0.3",
+    "webpack": "^4.18.0",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "dev:server": "webpack-dev-server"
+  },
+  "author": "Geoffrey",
+  "license": "ISC"
+}
