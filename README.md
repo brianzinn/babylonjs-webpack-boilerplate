@@ -17,7 +17,13 @@ npm install --save-dev webpack
 npm install --save-dev webpack-cli
 ```
 
-3) Then install these `webpack` plugins:
+3) Install the typescript compiler and loader by running:
+
+```
+npm install --save-dev typescript ts-loader
+```
+
+4) Then install these `webpack` plugins:
 ```
 npm i -D copy-webpack-plugin
 ```
