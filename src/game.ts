@@ -35,12 +35,21 @@ class Game {
         let sphere = BABYLON.MeshBuilder.CreateSphere('sphere1',
                                 {segments: 16, diameter: 2}, this._scene);
 
+        let material = new BABYLON.StandardMaterial("sphere_material", this._scene);
+        material.diffuseColor = new BABYLON.Color3(1, 0.5, 0.5);
+        sphere.material = material;
+
         // Move the sphere upward 1/2 of its height.
         sphere.position.y = 1;
 
         // Create a built-in "ground" shape.
         let ground = BABYLON.MeshBuilder.CreateGround('ground1',
                                 {width: 6, height: 6, subdivisions: 2}, this._scene);
+        
+        // the path to the texture corresponds to the path after you build your project (npm run build)
+        material = new BABYLON.StandardMaterial("ground1_material", this._scene);
+        material.diffuseTexture = new BABYLON.Texture("assets/2D/dungeons_and_flagons.jpg", this._scene);
+        ground.material = material;
     }
 
     doRender() : void {
