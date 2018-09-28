@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs';
+import '../assets/2D/dungeons_and_flagons3.jpg';
 
 class Game {
     private _canvas: HTMLCanvasElement;
@@ -6,13 +7,29 @@ class Game {
     private _scene: BABYLON.Scene;
     private _camera: BABYLON.FreeCamera;
     private _light: BABYLON.Light;
+    private _ground: BABYLON.Mesh;
 
     constructor(canvasElement : string) {
         // Create canvas and engine.
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this._engine = new BABYLON.Engine(this._canvas, true);
+
+        if(module.hot){
+            console.log("Changed Detected!");
+            module.hot.accept("../assets/2D/dungeons_and_flagons3.jpg", ()=>{
+                console.log("Accepting the change");
+                this.AcceptChange();
+            })
+        }        
         
-        
+    }
+
+    AcceptChange(){
+        // the path to the texture corresponds to the path after you build your project (npm run build)
+        let material = new BABYLON.StandardMaterial("ground1_material", this._scene);
+        material.diffuseTexture = new BABYLON.Texture("assets/2D/dungeons_and_flagons3.jpg", this._scene);
+        this._ground.material = material;
+        console.log('texture udapted!')
     }
     
     createScene() : void {
@@ -43,13 +60,13 @@ class Game {
         sphere.position.y = 1;
 
         // Create a built-in "ground" shape.
-        let ground = BABYLON.MeshBuilder.CreateGround('ground1',
+        this._ground = BABYLON.MeshBuilder.CreateGround('ground1',
                                 {width: 6, height: 6, subdivisions: 2}, this._scene);
         
         // the path to the texture corresponds to the path after you build your project (npm run build)
         material = new BABYLON.StandardMaterial("ground1_material", this._scene);
-        material.diffuseTexture = new BABYLON.Texture("assets/2D/dungeons_and_flagons.jpg", this._scene);
-        ground.material = material;
+        material.diffuseTexture = new BABYLON.Texture("assets/2D/dungeons_and_flagons3.jpg", this._scene);
+        this._ground.material = material;
     }
 
     doRender() : void {

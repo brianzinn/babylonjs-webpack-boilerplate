@@ -53,6 +53,10 @@ module.exports = {
                 // IMPORTANT! use transpileOnly mode to speed-up compilation
                 // ALSO very practical when you don't want your build to fail because of typescript errors which aren't detrimental to your javascript.
             }
+        },
+        {
+            test: /\.(png|svg|jpg|gif)$/,
+            loader: 'file-loader'
         }]
     }
 };
