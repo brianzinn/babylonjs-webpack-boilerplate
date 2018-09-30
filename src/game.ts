@@ -28,8 +28,14 @@ class Game {
         // the path to the texture corresponds to the path after you build your project (npm run build)
         let material = new BABYLON.StandardMaterial("ground1_material", this._scene);
         material.diffuseTexture = new BABYLON.Texture("assets/2D/dungeons_and_flagons3.jpg", this._scene);
-        this._ground.material = material;
-        console.log('texture udapted!')
+        
+        if(this._ground){
+            this._ground.material = material;
+            console.log('texture udapted!')
+        }
+        else{
+            console.log('texture NOT udapted!', this._ground)
+        }
     }
     
     createScene() : void {
