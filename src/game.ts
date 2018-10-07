@@ -27,7 +27,7 @@ class Game {
     AcceptChange(){
         // the path to the texture corresponds to the path after you build your project (npm run build)
         let material = new BABYLON.StandardMaterial("ground1_material", this._scene);
-        material.diffuseTexture = new BABYLON.Texture("assets/2D/dungeons_and_flagons3.jpg", this._scene);
+        material.diffuseTexture = new BABYLON.Texture("assets/2D/dungeons_and_flagons3.jpg?" + Date.now(), this._scene);
         
         if(this._ground){
             this._ground.material = material;
