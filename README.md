@@ -1,3 +1,13 @@
+# Ready (Soon) for Hot Module Reload
+
+Come with an example of how to use the Hot Module Reload for swapping texture at runtime:
+
+![](raw_assets/texture_hot_reloading@0.5.gif)
+
+# Ready (Soon) for Simple Shader Import
+
+See the branch `shader_import`.
+
 # Getting Started
 
 Assuming that `npm` is installed:
@@ -48,4 +58,6 @@ Go in your internet browser at http://localhost:8080/
 npm run build
 ```
 
+## Acknowledgements
 
+Thanks to **brianzinn** from [http://www.html5gamedevs.com](http://www.html5gamedevs.com) for their walkaround concerning the browser caching that was preventing the texture hot swapping to work.

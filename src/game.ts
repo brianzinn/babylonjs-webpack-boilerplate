@@ -27,8 +27,9 @@ class Game {
     AcceptChange(){
         // the path to the texture corresponds to the path after you build your project (npm run build)
         let material = new BABYLON.StandardMaterial("ground1_material", this._scene);
-        material.diffuseTexture = new BABYLON.Texture("assets/2D/dungeons_and_flagons3.jpg", this._scene);
-        
+        let imageSource = "assets/2D/dungeons_and_flagons3.jpg?" + Date.now();
+        material.diffuseTexture = new BABYLON.Texture(imageSource, this._scene);
+
         if(this._ground){
             this._ground.material = material;
             console.log('texture udapted!')
@@ -65,6 +66,9 @@ class Game {
         // Move the sphere upward 1/2 of its height.
         sphere.position.y = 1;
 
+        // animate the sphere
+        this.ApplyRotationAnimation(sphere);
+
         // Create a built-in "ground" shape.
         this._ground = BABYLON.MeshBuilder.CreateGround('ground1',
                                 {width: 6, height: 6, subdivisions: 2}, this._scene);
@@ -85,6 +89,43 @@ class Game {
         window.addEventListener('resize', () => {
             this._engine.resize();
         });
+    }
+
+    ApplyRotationAnimation(mesh:BABYLON.Mesh):void{
+        let frameRate = 6;
+        let duration = 6;
+
+        let xSlide = new BABYLON.Animation("xSlide", "position", frameRate, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+        let keyFrames = []; 
+
+        keyFrames.push({
+            frame: 0,
+            value: new BABYLON.Vector3(0,1,-1),
+            outTangent: new BABYLON.Vector3(1, 0, 0)
+            //interpolation: BABYLON.AnimationKeyInterpolation.STEP
+        });
+
+        keyFrames.push({
+            frame: duration/2,
+            inTangent: new BABYLON.Vector3(-1, 0, 0),
+            value: new BABYLON.Vector3(0, 1, 1),
+            outTangent: new BABYLON.Vector3(-1, 0, 0)
+            //interpolation: BABYLON.AnimationKeyInterpolation.STEP
+        });
+
+        keyFrames.push({
+            frame: duration,
+            value: new BABYLON.Vector3(0,1,-1),
+            inTangent: new BABYLON.Vector3(1, 0, 0)
+            //interpolation: BABYLON.AnimationKeyInterpolation.STEP
+        });
+
+        xSlide.setKeys(keyFrames);
+
+        let anim = this._scene.beginDirectAnimation(mesh, [xSlide], 0, duration, true);
+        anim.speedRatio = .5;
+
     }
 }
 
