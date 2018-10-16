@@ -1,44 +1,31 @@
 import * as BABYLON from 'babylonjs';
-import '../assets/2D/dungeons_and_flagons3.jpg';
+import TextureHotLoader from './textureHotLoader';
+
+// const pathToAssets = require.context('./assets', true);
 
 class Game {
     private _canvas: HTMLCanvasElement;
     private _engine: BABYLON.Engine;
-    private _scene: BABYLON.Scene;
-    private _camera: BABYLON.FreeCamera;
-    private _light: BABYLON.Light;
-    private _ground: BABYLON.Mesh;
+    private _scene?: BABYLON.Scene;
+    private _camera?: BABYLON.FreeCamera;
 
-    constructor(canvasElement : string) {
+    constructor(canvasId : string) {
         // Create canvas and engine.
-        this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
+        this._canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         this._engine = new BABYLON.Engine(this._canvas, true);
 
-        if(module.hot){
-            console.log("Changed Detected!");
-            module.hot.accept("../assets/2D/dungeons_and_flagons3.jpg", ()=>{
-                console.log("Accepting the change");
-                this.AcceptChange();
-            })
-        }        
-        
+        new TextureHotLoader(this._engine, [
+            '../assets/2D/dungeons_and_flagons3.jpg'
+        ]);
     }
 
-    AcceptChange(){
-        // the path to the texture corresponds to the path after you build your project (npm run build)
-        let material = new BABYLON.StandardMaterial("ground1_material", this._scene);
-        let imageSource = "assets/2D/dungeons_and_flagons3.jpg?" + Date.now();
-        material.diffuseTexture = new BABYLON.Texture(imageSource, this._scene);
+    createMaterial(url: string) : BABYLON.StandardMaterial {
+        let material = new BABYLON.StandardMaterial("sphere_material", this._scene!);
+        material.diffuseTexture = new BABYLON.Texture(url, this._scene!);
 
-        if(this._ground){
-            this._ground.material = material;
-            console.log('texture udapted!')
-        }
-        else{
-            console.log('texture NOT udapted!', this._ground)
-        }
+        return material;
     }
-    
+
     createScene() : void {
         // Create a basic BJS Scene object.
         this._scene = new BABYLON.Scene(this._engine);
@@ -53,16 +40,14 @@ class Game {
         this._camera.attachControl(this._canvas, false);
         
         // Create a basic light, aiming 0,1,0 - meaning, to the sky.
-        this._light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), this._scene);
+        new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), this._scene);
+        
+        let sphereMaterial = new BABYLON.StandardMaterial("sphere_material", this._scene);
+        sphereMaterial.diffuseColor = new BABYLON.Color3(1, 0.5, 0.5);                        
         
         // Create a built-in "sphere" shape; with 16 segments and diameter of 2.
-        let sphere = BABYLON.MeshBuilder.CreateSphere('sphere1',
-                                {segments: 16, diameter: 2}, this._scene);
-
-        let material = new BABYLON.StandardMaterial("sphere_material", this._scene);
-        material.diffuseColor = new BABYLON.Color3(1, 0.5, 0.5);
-        sphere.material = material;
-
+        let sphere = BABYLON.MeshBuilder.CreateSphere('sphere1', {segments: 16, diameter: 2}, this._scene);
+        sphere.material = sphereMaterial;
         // Move the sphere upward 1/2 of its height.
         sphere.position.y = 1;
 
@@ -70,19 +55,23 @@ class Game {
         this.ApplyRotationAnimation(sphere);
 
         // Create a built-in "ground" shape.
-        this._ground = BABYLON.MeshBuilder.CreateGround('ground1',
-                                {width: 6, height: 6, subdivisions: 2}, this._scene);
-        
+        const ground1 = BABYLON.MeshBuilder.CreateGround('ground1', {width: 2, height: 2, subdivisions: 2}, this._scene);
+        ground1.material = this.createMaterial("/assets/2D/dungeons_and_flagons3.jpg");
+        ground1.position.x += 3;   
+
         // the path to the texture corresponds to the path after you build your project (npm run build)
-        material = new BABYLON.StandardMaterial("ground1_material", this._scene);
-        material.diffuseTexture = new BABYLON.Texture("assets/2D/dungeons_and_flagons3.jpg", this._scene);
-        this._ground.material = material;
+        const ground2 = BABYLON.MeshBuilder.CreateGround('ground2', {width: 2, height: 2, subdivisions: 2}, this._scene);
+        ground2.material = this.createMaterial("/assets/2D/dungeons_and_flagons3.jpg");
+        ground2.position.x -= 3;   
     }
 
     doRender() : void {
+        if (!this._scene) {
+            console.error('call createScene() before doRender()')
+        }
         // Run the render loop.
         this._engine.runRenderLoop(() => {
-            this._scene.render();
+            this._scene!.render();
         });
 
         // The canvas/window resize event handler.
@@ -134,6 +123,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let game = new Game('renderCanvas');
 
     // Create the scene.
+    console.log('creating the scene.')
     game.createScene();
 
     // Start render loop.

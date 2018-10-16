@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
@@ -18,8 +19,28 @@ module.exports = {
     // source maps are useful for debugging
     devtool: 'source-map',
 
+    devServer: {
+        hotOnly: true,
+        //activate hot reloading
+        open: true,
+
+        //contentBase: path.resolve(__dirname, 'build'),
+        //match the output path
+  
+        publicPath: '/'
+        //match the output publicPath
+    },
+    externals: {
+        "oimo": true,
+        "cannon": true,
+        "earcut": true
+    },
     // you can install many webpack plug-ins, you will set them up here: 
     plugins: [
+        // Enable the plugin to let webpack communicate changes
+        // to WDS. --hot sets this automatically!
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NamedModulesPlugin(),
         // copy-paste index.html and the assets folder to the build folder
         new CopyWebpackPlugin([
             {
